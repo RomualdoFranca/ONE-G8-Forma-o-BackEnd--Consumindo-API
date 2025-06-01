@@ -8,6 +8,9 @@ public class Titulo implements Comparable<Titulo> {
     // isso é um metadado
     //Serializar é transformar coisas de memoria, objetos e estruturas em textos
     //Aqui estamos 'ensinando' ao Gson como procurar na string json gerada pera pesquisa
+
+    //OBS: o uso do @SerializedName não é escalável. Caso seja utilizado outra api em que os nome do title e ano sejam
+    //difenrentes, o código deve ser alterado
     @SerializedName("Title")
     private String nome;
     @SerializedName("Year")
@@ -21,6 +24,16 @@ public class Titulo implements Comparable<Titulo> {
         this.nome = nome;
         this.anoDeLancamento = anoDeLancamento;
     }
+
+    public Titulo(TituloOmdb meuTituloOmdb) {
+        this.nome = meuTituloOmdb.title();
+
+        this.anoDeLancamento = Integer.valueOf(meuTituloOmdb.year());
+        // o metodo substring() está sendo utilizado para pegar apenas a parte do numeral, ja que no jason esta vindo
+        // a abreviação 'min'.
+        this.duracaoEmMinutos = Integer.valueOf(meuTituloOmdb.runtime().substring(0,3));
+    }
+
 
     public String getNome() {
         return nome;
@@ -81,6 +94,7 @@ public class Titulo implements Comparable<Titulo> {
     @Override
     public String toString() {
         return "nome:"  + nome + '\n' +
-                "ano de lançamento: " + anoDeLancamento;
+                "ano de lançamento: " + anoDeLancamento + '\n' +
+                "Duração: " + duracaoEmMinutos;
     }
 }
